@@ -14,5 +14,8 @@ public interface StudentUserService {
 
     public List<Student> findAllUsers();
 
+    public Student saveStudent(Student student);
+
+    public void deleteStudent(String id);
 }
 

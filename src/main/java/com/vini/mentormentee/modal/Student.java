@@ -1,15 +1,13 @@
 package com.vini.mentormentee.modal;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "students")
 public class Student {
     @Id
     private String usn;
@@ -19,4 +17,8 @@ public class Student {
     private Long studentBatch;
     private String studentPassword;
     private String department;
+    @ManyToOne
+    @JoinColumn(name = "mentor_id")
+    private Mentor mentor;
+
 }

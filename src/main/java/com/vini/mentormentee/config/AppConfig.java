@@ -27,11 +27,16 @@ public class AppConfig {
 		http
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(authorize -> authorize
-						.requestMatchers("/swagger-ui/**").permitAll()
-						.requestMatchers("/api/**").authenticated() // Require authentication for /api/**
+						.requestMatchers("/auth/**").permitAll()
+						.requestMatchers("/api/student/users/**").permitAll() // Testing access for this endpoint
+						.requestMatchers("/api/mentor/users/**").permitAll()
+//						.requestMatchers("/api/**").authenticated() // Require authentication for /api/**
+//						.requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+//						.requestMatchers("/api/admin/**").permitAll()
 						.anyRequest().permitAll()
+
 				)
-				.addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
+//				.addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
 				.csrf(AbstractHttpConfigurer::disable)
 				.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 

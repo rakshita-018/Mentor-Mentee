@@ -6,6 +6,7 @@ import com.vini.mentormentee.exception.UserException;
 import com.vini.mentormentee.modal.Student;
 import com.vini.mentormentee.repository.StudentRepository;
 import com.vini.mentormentee.service.StudentUserService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,8 +15,8 @@ import java.util.Optional;
 @Service
 public class StudentUserServiceImplementation implements StudentUserService {
 
-    private StudentRepository studentRepository;
-    private JwtTokenProvider jwtTokenProvider;
+    private final StudentRepository studentRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public StudentUserServiceImplementation(StudentRepository studentRepository, JwtTokenProvider jwtTokenProvider) {
         this.studentRepository = studentRepository;
@@ -47,4 +48,24 @@ public class StudentUserServiceImplementation implements StudentUserService {
     public List<Student> findAllUsers() {
         return studentRepository.findAllStudentByOrderByUsn();
     }
+
+    @Override
+    public Student saveStudent(Student student) {
+        return studentRepository.save(student);
+    }
+
+    public boolean existsById(String id){
+        return studentRepository.existsById(id);
+    }
+    @Override
+    public void deleteStudent(String id) {
+        if(existsById(id)){
+            studentRepository.deleteById(id);
+        }
+        else{
+            throw new EntityNotFoundException("Student not found with id " + id);
+        }
+    }
+
+
 }

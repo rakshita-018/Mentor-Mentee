@@ -3,11 +3,10 @@ package com.vini.mentormentee.controller;
 import com.vini.mentormentee.config.JwtTokenProvider;
 import com.vini.mentormentee.exception.UserException;
 import com.vini.mentormentee.modal.Mentor;
-import com.vini.mentormentee.modal.Student;
-import com.vini.mentormentee.repository.StudentRepository;
-import com.vini.mentormentee.req.LoginRequestStudent;
+import com.vini.mentormentee.repository.MentorRepository;
+import com.vini.mentormentee.req.LoginRequestMentor;
 import com.vini.mentormentee.res.AuthResponse;
-import com.vini.mentormentee.service.serviceImpl.StudentDetailsService;
+import com.vini.mentormentee.service.serviceImpl.MentorDetailsService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,49 +21,45 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 @RestController
-@RequestMapping("/auth/student")
-public class StudentAuthController {
-
-    private final StudentRepository studentRepository;
+@RequestMapping("/auth/mentor")
+public class MentorAuthController {
     private final PasswordEncoder passwordEncoder;
+    private final MentorRepository mentorRepository;
     private final JwtTokenProvider jwtTokenProvider;
-    private final StudentDetailsService studentDetailsService;
+    private final MentorDetailsService mentorDetailsService;
 
-    public StudentAuthController(StudentRepository studentRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, StudentDetailsService studentDetailsService) {
-        this.studentRepository = studentRepository;
+
+    public MentorAuthController(PasswordEncoder passwordEncoder, MentorRepository mentorRepository, JwtTokenProvider jwtTokenProvider, MentorDetailsService mentorDetailsService) {
         this.passwordEncoder = passwordEncoder;
+        this.mentorRepository = mentorRepository;
         this.jwtTokenProvider = jwtTokenProvider;
-        this.studentDetailsService = studentDetailsService;
+        this.mentorDetailsService = mentorDetailsService;
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<AuthResponse> createStudentHandler(@Valid @RequestBody Student student) throws UserException {
-        String email = student.getStudentEmail();
-        String password = student.getStudentPassword();
-        String usn = student.getUsn();
-        String studentName = student.getStudentName();
-        String studentPhone = student.getStudentPhone();
-        Long studentBatch = student.getStudentBatch();
-        String department = student.getDepartment();
-        Mentor mentor = student.getMentor();
+    public ResponseEntity<AuthResponse> createMentorHandler(@Valid @RequestBody Mentor mentor) throws UserException {
+        String email = mentor.getMentorEmail();
+        String password = mentor.getMentorPassword();
+        String name = mentor.getMentorName();
+        String phone = mentor.getMentorPhone();
+        String dept = mentor.getMentorDept();
+        String uid = mentor.getUid();
 
-
-        Student isEmailExist = studentRepository.findByStudentEmail(email);
+        Mentor isEmailExist = mentorRepository.findByMentorEmail(email);
 
         if (isEmailExist != null) {
             throw new UserException("Email Is Already Used With Another Account");
         }
 
-        student.setStudentPassword(passwordEncoder.encode(password));
-        student.setStudentEmail(email);
-        student.setUsn(usn);
-        student.setStudentName(studentName);
-        student.setStudentPhone(studentPhone);
-        student.setStudentBatch(studentBatch);
-        student.setDepartment(department);
-        student.setMentor(mentor);
-        Student savedStudent = studentRepository.save(student);
+        mentor.setMentorPassword(passwordEncoder.encode(password));
+        mentor.setMentorEmail(email);
+        mentor.setMentorName(name);
+        mentor.setMentorPhone(phone);
+        mentor.setMentorDept(dept);
+        mentor.setUid(uid);
+        Mentor savedMentor = mentorRepository.save(mentor);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(email, password);
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -77,9 +72,9 @@ public class StudentAuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<AuthResponse> signin(@RequestBody LoginRequestStudent loginRequestStudent) {
-        String username = loginRequestStudent.getEmail();
-        String password = loginRequestStudent.getPassword();
+    public ResponseEntity<AuthResponse> signin(@RequestBody LoginRequestMentor loginRequestMentor) {
+        String username = loginRequestMentor.getEmail();
+        String password = loginRequestMentor.getPassword();
 
         Authentication authentication = authenticate(username, password);
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -93,7 +88,7 @@ public class StudentAuthController {
     }
 
     private Authentication authenticate(String username, String password) {
-        UserDetails userDetails = studentDetailsService.loadUserByUsername(username);
+        UserDetails userDetails = mentorDetailsService.loadUserByUsername(username);
 
         if (userDetails == null) {
             throw new BadCredentialsException("Invalid username or password");
@@ -104,4 +99,3 @@ public class StudentAuthController {
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 }
-
