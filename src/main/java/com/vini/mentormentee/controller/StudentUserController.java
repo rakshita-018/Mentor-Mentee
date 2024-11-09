@@ -5,6 +5,7 @@ import com.vini.mentormentee.exception.UserException;
 import com.vini.mentormentee.modal.Student;
 import com.vini.mentormentee.repository.StudentRepository;
 import com.vini.mentormentee.service.StudentUserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,14 +14,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/student/users")
+@RequiredArgsConstructor
 public class StudentUserController {
     private final StudentUserService studentUserService;
     private final StudentRepository studentRepository;
 
-    public StudentUserController(StudentUserService studentUserService, StudentRepository studentRepository) {
-        this.studentUserService = studentUserService;
-        this.studentRepository = studentRepository;
-    }
 
     @GetMapping("/all")
     public ResponseEntity<List<Student>> getAllUsers(@RequestHeader("Authorization") String jwt) {

@@ -8,6 +8,7 @@ import com.vini.mentormentee.req.LoginRequestMentor;
 import com.vini.mentormentee.res.AuthResponse;
 import com.vini.mentormentee.service.serviceImpl.MentorDetailsService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,19 +25,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth/mentor")
+@RequiredArgsConstructor
 public class MentorAuthController {
     private final PasswordEncoder passwordEncoder;
     private final MentorRepository mentorRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final MentorDetailsService mentorDetailsService;
 
-
-    public MentorAuthController(PasswordEncoder passwordEncoder, MentorRepository mentorRepository, JwtTokenProvider jwtTokenProvider, MentorDetailsService mentorDetailsService) {
-        this.passwordEncoder = passwordEncoder;
-        this.mentorRepository = mentorRepository;
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.mentorDetailsService = mentorDetailsService;
-    }
 
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> createMentorHandler(@Valid @RequestBody Mentor mentor) throws UserException {

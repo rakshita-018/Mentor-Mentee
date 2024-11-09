@@ -9,6 +9,7 @@ import com.vini.mentormentee.req.LoginRequestStudent;
 import com.vini.mentormentee.res.AuthResponse;
 import com.vini.mentormentee.service.serviceImpl.StudentDetailsService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth/student")
+@RequiredArgsConstructor
 public class StudentAuthController {
 
     private final StudentRepository studentRepository;
@@ -31,12 +33,6 @@ public class StudentAuthController {
     private final JwtTokenProvider jwtTokenProvider;
     private final StudentDetailsService studentDetailsService;
 
-    public StudentAuthController(StudentRepository studentRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, StudentDetailsService studentDetailsService) {
-        this.studentRepository = studentRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.studentDetailsService = studentDetailsService;
-    }
 
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> createStudentHandler(@Valid @RequestBody Student student) throws UserException {
