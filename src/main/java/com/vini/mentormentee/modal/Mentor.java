@@ -21,4 +21,5 @@ public class Mentor {
 
     @OneToMany(mappedBy = "mentor",cascade = CascadeType.ALL)
     private List<Student> students;
+
 }
