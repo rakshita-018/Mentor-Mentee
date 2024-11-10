@@ -28,15 +28,13 @@ public class AppConfig {
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers("/auth/**").permitAll()
-						.requestMatchers("/api/student/users/**").permitAll() // Testing access for this endpoint
-						.requestMatchers("/api/mentor/users/**").permitAll()
+						.requestMatchers("/api/**").authenticated() // Testing access for this endpoint
 //						.requestMatchers("/api/**").authenticated() // Require authentication for /api/**
 //						.requestMatchers("/api/admin/**").hasAuthority("ADMIN")
 //						.requestMatchers("/api/admin/**").permitAll()
 						.anyRequest().permitAll()
-
 				)
-//				.addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
+				.addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
 				.csrf(AbstractHttpConfigurer::disable)
 				.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
@@ -46,7 +44,7 @@ public class AppConfig {
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:5173"));
+		configuration.setAllowedOrigins(Collections.singletonList(("*")));
 		configuration.setAllowedMethods(Collections.singletonList("*"));
 		configuration.setAllowCredentials(true);
 		configuration.setAllowedHeaders(Collections.singletonList("*"));
