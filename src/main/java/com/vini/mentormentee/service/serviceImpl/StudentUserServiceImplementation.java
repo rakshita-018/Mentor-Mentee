@@ -34,7 +34,6 @@ public class StudentUserServiceImplementation implements StudentUserService {
 
     @Override
     public Student findUserProfileByJwt(String jwt) throws UserException {
-
         String email = jwtTokenProvider.getEmailFromJwtToken(jwt);
         Student student = studentRepository.findByStudentEmail(email);
         if(student == null){
