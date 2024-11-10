@@ -3,6 +3,7 @@ package com.vini.mentormentee.controller;
 import com.vini.mentormentee.config.JwtTokenProvider;
 import com.vini.mentormentee.exception.UserException;
 import com.vini.mentormentee.modal.Mentor;
+import com.vini.mentormentee.modal.Student;
 import com.vini.mentormentee.repository.MentorRepository;
 import com.vini.mentormentee.req.LoginRequestMentor;
 import com.vini.mentormentee.res.AuthResponse;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 
 @RestController
@@ -41,6 +44,7 @@ public class MentorAuthController {
         String phone = mentor.getMentorPhone();
         String dept = mentor.getMentorDept();
         String uid = mentor.getUid();
+        List<Student> Studentlist = mentor.getStudents();
 
         Mentor isEmailExist = mentorRepository.findByMentorEmail(email);
 
@@ -54,6 +58,7 @@ public class MentorAuthController {
         mentor.setMentorPhone(phone);
         mentor.setMentorDept(dept);
         mentor.setUid(uid);
+        mentor.setStudents(Studentlist);
         Mentor savedMentor = mentorRepository.save(mentor);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(email, password);
